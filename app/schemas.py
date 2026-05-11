@@ -1,14 +1,34 @@
-
-# perguntado ao gpt se existia algum import que ajudasse em validações e verificações, encontrei o pydantic.
-# BaseModel para criar modelos de dados e Field para adicionar as validações
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class RegistroCreate(BaseModel):
-    #Field fazendo com que o campo seja obrigatório e >= 1 <=5
-    nivel_foco: int = Field(..., ge=1, le=5)
 
-    #seguindo a mesma lógica os outros campos são obrigatórios de acordo com o tipo.
-    tempo_minutos: int
-    comentario: str
-    categoria: str
+    nivel_foco: int = Field(
+        ...,
+        ge=1,
+        le=5,
+        description="Nível de foco de 1 até 5"
+    )
+
+    tempo_minutos: int = Field(
+        ...,
+        gt=0,
+        description="Tempo da sessão em minutos"
+    )
+
+    comentario: str = Field(
+        ...,
+        min_length=3,
+        max_length=200,
+        description="Comentário da sessão"
+    )
+
+    categoria: str = Field(
+        ...,
+        min_length=3,
+        max_length=30,
+        description="Categoria da atividade"
+    )
+
+    data_criacao: datetime = datetime.now()
